@@ -39,6 +39,9 @@ import matplotlib.pyplot as plt
 
 print(tensor.__version__)
 
-fashion_mnist = tf.keras.datasets.fashion_mnist
+clothes = tf.keras.datasets.clothes
 
-(train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
+(training_images, training_labels), (test_images, test_labels) = clothes.load_data()
+
+
+

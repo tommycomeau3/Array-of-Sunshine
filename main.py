@@ -37,6 +37,12 @@ import tensorflow as tensor
 import numpy as np
 import matplotlib.pyplot as plt
 
+from tensorflow.keras.datasets import fashion_mnist
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Flatten, Dense
+import random
+from sklearn.metrics import classification_report
+
 print(tensor.__version__)
 
 clothes = tf.keras.datasets.clothes

@@ -41,64 +41,75 @@ import matplotlib.pyplot as plt
 import random
 from sklearn.metrics import classification_report
 
-
-#load and preprocess the dataset
+# Load and preprocess the dataset
 def load_and_preprocess_data():
+    # Load the Fashion MNIST dataset into training and testing sets
     (x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
+    # Normalize the image data to 0-1 range by dividing by 255
     x_train, x_test = x_train / 255.0, x_test / 255.0
+    # Return the processed data sets
     return x_train, y_train, x_test, y_test
 
-#initialize and compile the neural network model
+# Initialize and compile the neural network model
 def create_model():
+    # Create a sequential model
     model = Sequential([
+        # First layer to flatten the input 28x28 image into a vector of 784 pixels
         Flatten(input_shape=(28, 28)),
+        # Dense layer with 128 neurons and ReLU activation function
         Dense(128, activation='relu'),
+        # Output dense layer with 10 neurons for each class, using softmax for probabilistic output
         Dense(10, activation='softmax')
     ])
+    # Compile the model with Adam optimizer, cross-entropy loss, and accuracy metrics
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
     return model
 
-#display the image with its prediction
+# Display the image with its prediction
 def display_prediction(index, predictions, labels, images):
+    # Get the index of the highest probability class from the prediction
     pred_label = np.argmax(predictions[index])
+    # Get the actual label for the image
     actual_label = labels[index]
+    # Display the image
     plt.imshow(images[index], cmap=plt.cm.binary)
+    # Add a title to the image showing predicted and actual labels and prediction confidence
     plt.title("Predicted: {} ({:.0f}%), Actual: {}".format(
         class_names[pred_label], 100 * np.max(predictions[index]), class_names[actual_label]))
     plt.colorbar()
     plt.grid(False)
     plt.show()
 
-#main function
+# Main function
 def main():
-    # split data in to training and testing.
+    # Load and preprocess the data
     x_train, y_train, x_test, y_test = load_and_preprocess_data()
-
-    # initialize the model.
+    
+    # Initialize the model
     model = create_model()
-
-    # train the model using the training data provided from load_and_preprocess_data.
+    
+    # Train the model using the provided training data for 10 epochs
     model.fit(x_train, y_train, epochs=10)
-
-    # now that we trained the model; calculate loss / accuracy using testing data from load_and_preprocess_data.
+    
+    # Evaluate the model using the test data to calculate loss and accuracy
     test_loss, test_acc = model.evaluate(x_test, y_test, verbose=2)
     print("Test accuracy: {:.2f}%".format(test_acc * 100))
-
-    # get result from model.
+    
+    # Predict classes using the model on the test data
     predictions = model.predict(x_test)
     predicted_classes = np.argmax(predictions, axis=1)
-
+    
+    # Print a classification report comparing predictions to actual labels
     print(classification_report(y_test, predicted_classes, target_names=class_names))
-
+    
+    # Display a random prediction from the test data
     random_index = random.randint(0, len(x_test) - 1)
     display_prediction(random_index, predictions, y_test, x_test)
 
-
-#class names from dataset
+# Class names from the dataset
 class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
                'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 
+# Run the main function if the script is executed as the main program
 if __name__ == "__main__":
     main()
-
-
